@@ -1,0 +1,25 @@
+{
+  "name": "weight_daily",
+  "version": "1.0.0",
+  "description": "Weight and workout tracking",
+  "main": "sketch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrhossie/weight_daily.git"
+  },
+  "keywords": [
+    "weight"
+  ],
+  "author": "hossam m",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrhossie/weight_daily/issues"
+  },
+  "homepage": "https://github.com/mrhossie/weight_daily#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
