@@ -37,6 +37,7 @@ function addWeight (request, response){
   }
   response.send(reply);
 }
+
 app.get("/search/:date", searchDate);
 function searchDate(request, response){
   var date = request.params.date;
@@ -53,4 +54,24 @@ function searchDate(request, response){
   }
   response.send(reply);
 
+}
+
+app.get("/add/:date/:attended", addAttended);
+function addAttended (request, response){
+
+  var data = request.params;
+  var date = data.date;
+  //enter error handling for dates.
+  var attended = data.attended;
+  //ender error handling for attendance
+  if(attended == "yes"){
+      weights[date].bjj = true;
+  }else{
+      weights[date].bjj = false;
+  }
+
+  var reply = {
+    msg: "Attendance noted"
+  }
+  response.send(reply);
 }
