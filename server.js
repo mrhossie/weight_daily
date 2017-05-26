@@ -23,6 +23,8 @@ function sendAll(request, response){
   console.log("sent data");
 }
 
+//hi
+
 app.get("/add/:date/:weight", addWeight);
 function addWeight (request, response){
 
