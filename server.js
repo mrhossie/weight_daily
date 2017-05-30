@@ -13,7 +13,20 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-var jsonParser = bodyParser.json();
+// var jsonParser = bodyParser.json();
+// var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+//post data.
+app.post('/addP', addDatas);
+
+function addDatas (request, response){
+  console.log(request.body);
+  var reply = {status: "Data Added"}
+  response.send(reply);
+
+}
+
+
 
 var fs = require("fs");
 var data = fs.readFileSync("final.json");
@@ -48,14 +61,7 @@ function searchDate(request, response){
 
 }
 
-app.post('/addP',jsonParser, addDatas);
 
-function addDatas (request, response){
-  console.log(request.body);
-  var reply = {status: "Data Added"}
-  response.send(reply);
-
-}
 
 
 
