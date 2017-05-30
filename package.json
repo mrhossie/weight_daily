@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/mrhossie/weight_daily#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3"
   }
 }
