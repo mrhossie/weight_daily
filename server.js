@@ -1,6 +1,6 @@
 console.log('server is starting');
 
-//setting up express, bodyparser 
+//setting up express, bodyparser
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -13,6 +13,13 @@ function listening(){
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+
+//for reading the file and setting the active database.
+var fs = require("fs");
+var data = fs.readFileSync("final.json");
+
+//parsing the data from the file into JSON object.
+var weights = JSON.parse(data);
 
 // var jsonParser = bodyParser.json();
 // var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -27,14 +34,22 @@ function addDatas (request, response){
   var date = request.body.date;
   //enter error handling for dates/weights/attended - or leave it at client side?
   var weight = request.body.weight;
-  weights[date].weight = Number(weight);
-  var attended = request.body.bjj;
+  var attended;
 
-  if(attended == "true"){
-      weights[date].bjj = true;
+  if(request.body.bjj == "true"){
+      attended = true;
   }else{
-      weights[date].bjj = false;
+      attended = false;
   }
+  var newData = {
+    weight: Number(weight),
+    bjj: attended
+  }
+
+  weights[date] = newData
+
+
+
   // confirm back to the server that new data has been added.
   var reply = {
     msg: "New data added",
@@ -43,16 +58,16 @@ function addDatas (request, response){
     bjj: attended
   }
   response.send(reply);
+  var writeData = JSON.stringify(weights, null, 2);
+  fs.writeFile("final.json",writeData, writeComplete);
+  function writeComplete(){
+    console.log("Server File Updated");
+  }
 
 }
 
 
-//for reading the file and setting the active database.
-var fs = require("fs");
-var data = fs.readFileSync("final.json");
 
-//parsing the data from the file into JSON object.
-var weights = JSON.parse(data);
 
 //sending all data to the client.
 app.get("/all", sendAll);

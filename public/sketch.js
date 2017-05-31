@@ -19,7 +19,8 @@ function preload() {}
 
 //setup function for the p5js sketch.
 function setup() {
-  //createCanvas(400,400);
+  //var cnv=  createCanvas(800,400);
+  //cnv.parent('canvas');
   //background(51);
 
   //selecting DOM elements.
@@ -58,30 +59,37 @@ function gotData(data) {
 function setValues() {
   userDate = uDate.value();
 
-  if (!uWeight.value()){
+  if (!uWeight.value() && allData[userDate]) {
+    //updating a weight if the date entry exists.
     userWeight = allData[userDate].weight;
-  }else{
+  }else if(!uWeight.value()){
+      //ERROR that date needs a weight at least!
+      var msg = "ERROR!"
+      alert("Please Enter weight");
+      return msg;
+  } else {
     userWeight = uWeight.value();
   }
 
-  if(!uAttendance.value()){
+  if (!uAttendance.value()) {
     userAttended = allData[userDate].bjj;
-  }else if (uAttendance.value() == "yes") {
+  } else if (uAttendance.value() == "yes") {
     userAttended = true;
-  } else if (uAttendance.value() == "no"){
+  } else if (uAttendance.value() == "no") {
     userAttended = false;
   }
 
   //the JSON object to be added to the server
+
   var r = {
-      date: userDate,
-      weight: userWeight,
-      bjj : userAttended
+    date: userDate,
+    weight: userWeight,
+    bjj: userAttended
 
 
   };
   // had to resort to jQuery library to handle post request.
-  $.post("/addP",r,finished);
+  $.post("/addP", r, finished);
 
 
   //httpPost("/addP","json",r, finished); // round trip works, but no data is sent?.
@@ -93,7 +101,8 @@ function finished(d) {
   console.log(d);
   reloadData();
 }
-function clearFields(){
+
+function clearFields() {
   //this happens in setValues to clear all fields.
 }
 
@@ -119,9 +128,34 @@ function showValues() {
 }
 
 //work in progress to start data analysis.
-function analyzeData(){
+function analyzeData() {
   var keys = Object.keys(allData);
   var initialWeight = allData[keys[0]].weight;
-  var currentWeight = allData[keys[keys.length-1]].weight;
-  analysisParagraph.html("Total Weight Loss: "+(initialWeight-currentWeight)+"lbs");
+  var currentWeight = allData[keys[keys.length - 1]].weight;
+  analysisParagraph.html("Total Weight Loss: " + (initialWeight - currentWeight) + "lbs");
+  analysisParagraph.html("</br>Average Daily Weight Loss: " + averageWeightLoss(keys) + "lbs", true);
+  graphIt(keys);
+}
+
+function averageWeightLoss(k) {
+  var averageWeightLossValue = 0;
+  for (var i = 0; i < k.length; i++) {
+    if (i != 0) {
+      var weightLoss = allData[k[i]].weight - allData[k[i-1]].weight;
+      averageWeightLossValue += weightLoss;
+      averageWeightLossValue /= 2;
+    }
+  }
+  return Math.abs(roundValue(averageWeightLossValue, 2));
+}
+
+function graphIt(k){
+//zzz
+
+}
+
+
+function roundValue(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
 }
