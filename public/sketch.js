@@ -46,7 +46,46 @@ function setup() {
 
   parag.changed(doAThing);
   function doAThing(){
-    console.log(parag.value());
+    var selectResult = select("#selectResult");
+    var keys = Object.keys(allData);
+    var beforeWeight = allData[parag.value()].weight;
+    var afterWeight = allData[parag.value()].weight;
+    var currentWeight = allData[parag.value()].weight;
+    var bjj = "No";
+
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i]==parag.value()){
+        if (i == 0){
+          afterWeight = allData[keys[i+1]].weight;
+
+        } else if (i == keys.length-1){
+          if (allData[keys[i-1]].bjj){
+            bjj = "Yes";
+          }else{
+            bjj = "No";
+          }
+          beforeWeight = allData[keys[i-1]].weight;
+
+        }else{
+          beforeWeight = allData[keys[i-1]].weight;
+          afterWeight = allData[keys[i+1]].weight;
+          if (allData[keys[i-1]].bjj){
+            bjj = "Yes";
+          }else{
+            bjj = "No";
+          }
+
+        }
+          break;
+        }
+      }
+
+
+    selectResult.html("Current Weight: " + currentWeight + "lbs");
+    selectResult.html("<br>BJJ Night Before? "+ bjj, true);
+    selectResult.html("<br>Weight Change from Yesterday: "+ (currentWeight-beforeWeight)+ "lbs", true);
+    selectResult.html("<br>Weight Change day after: "+ (afterWeight -currentWeight)+ "lbs", true);
+
   }
 
 }
@@ -54,6 +93,7 @@ function setup() {
 
 //this functions loads the data from the JSON object on server
 function reloadData() {
+
   loadJSON("/all", gotData);
   console.log("Data reloaded...");
 
@@ -125,7 +165,7 @@ function showValues() {
   viewP.html("");
   var keys = Object.keys(allData);
 
-  for (var i = 0; i < keys.length; i++) {
+  for (var i = keys.length-1; i > 0; i--) {
 
     var line = "Date: " + keys[i] + " Weight: " + allData[keys[i]].weight;
     if (allData[keys[i]].bjj) {
@@ -134,8 +174,8 @@ function showValues() {
       line += " attended: no "
     }
 
-    var x = createElement("option", line);
-    x.value(line);
+    var x = createElement("option", keys[i]);
+    x.value(keys[i]);
     x.parent(parag);
     line += "</br>";
     viewP.html(line, true);

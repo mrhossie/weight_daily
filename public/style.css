@@ -1,3 +1,7 @@
-body{
+body {
   background: gray;
+}
+
+.results {
+  padding: 70px 0;
 }
