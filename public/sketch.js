@@ -13,6 +13,9 @@ var analysis;
 var analysisParagraph;
 var uWeight;
 var uAttendance;
+var viewP;
+var parag;
+
 
 //preload function for the sketch library - this isnt really needed unless you dont want to use async methonds.
 function preload() {}
@@ -24,6 +27,8 @@ function setup() {
   //background(51);
 
   //selecting DOM elements.
+  viewP = select("#viewData");
+  parag = select("#selectList");
   uDate = select("#udate");
   submit = select("#submit");
   view = select("#view");
@@ -38,6 +43,12 @@ function setup() {
   submit.mousePressed(setValues);
   view.mousePressed(showValues);
   analysis.mousePressed(analyzeData);
+
+  parag.changed(doAThing);
+  function doAThing(){
+    console.log(parag.value());
+  }
+
 }
 
 
@@ -109,7 +120,8 @@ function clearFields() {
 //this lists all the values in the data.
 //need to find a better way to display this on the page.
 function showValues() {
-  var viewP = select("#viewData");
+
+  parag.html("");
   viewP.html("");
   var keys = Object.keys(allData);
 
@@ -121,7 +133,11 @@ function showValues() {
     } else {
       line += " attended: no "
     }
-    line += "</br>"
+
+    var x = createElement("option", line);
+    x.value(line);
+    x.parent(parag);
+    line += "</br>";
     viewP.html(line, true);
   }
 
